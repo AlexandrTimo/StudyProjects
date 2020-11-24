@@ -104,7 +104,7 @@ const calcBalanceSummary = cur => {
   const curWithdrawal = Math.abs(cur.filter( cur => cur < 0).reduce( (acc, cur ) => acc + cur));
   labelSumOut.textContent = `${curWithdrawal}$`;
 
-  const interest = cur.filter( cur => cur > 0).map( cur => cur * 1.2/100).filter( cur => cur >= 1).reduce( (acc, cur ) => acc + cur); // <-- Interest of the bank
+  const interest = cur.filter( cur => cur > 0).map( cur => cur * 1.2/100).filter( cur => cur >= 1).reduce( (acc, cur ) => acc + cur); // <-- Interest of the bank only 1% or more
   labelSumInterest.textContent = `${interest}$`;
   };
 
