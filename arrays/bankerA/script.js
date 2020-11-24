@@ -3,8 +3,8 @@
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
 // BANKIST APP
-
-/* // Data
+ 
+// Data
 const account1 = {
   owner: 'Jonas Schmedtmann',
   movements: [200, 450, -400, 3000, -650, -130, 70, 1300],
@@ -17,7 +17,7 @@ const account2 = {
   movements: [5000, 3400, -150, -790, -3210, -1000, 8500, -30],
   interestRate: 1.5,
   pin: 2222,
-};
+}; 
 
 const account3 = {
   owner: 'Steven Thomas Williams',
@@ -35,7 +35,7 @@ const account4 = {
 
 const accounts = [account1, account2, account3, account4];
 
-// Elements
+ // Elements
 const labelWelcome = document.querySelector('.welcome');
 const labelDate = document.querySelector('.date');
 const labelBalance = document.querySelector('.balance__value');
@@ -44,7 +44,7 @@ const labelSumOut = document.querySelector('.summary__value--out');
 const labelSumInterest = document.querySelector('.summary__value--interest');
 const labelTimer = document.querySelector('.timer');
 
-const containerApp = document.querySelector('.app');
+const containerApp = document.querySelector('.app'); 
 const containerMovements = document.querySelector('.movements');
 
 const btnLogin = document.querySelector('.login__btn');
@@ -60,100 +60,53 @@ const inputTransferAmount = document.querySelector('.form__input--amount');
 const inputLoanAmount = document.querySelector('.form__input--loan-amount');
 const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
- */
-/////////////////////////////////////////////////
-/////////////////////////////////////////////////
-// LECTURES
-
-const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
-
-///////////////////////////////////////////////////
-console.log('------------------------------------------------------------------------');
-// FOREACH
-// Does NOT change original array -->
-
-movements.forEach((curElement, index, array) =>{
-  if (curElement > 0){
-    console.log(`Movement ${index + 1}: You deposited ${curElement}`);
-  }
-  else{
-    console.log(`Movement ${index + 1}: You withdrew ${Math.abs(curElement)}`);
-  }
-});
-console.log(movements);
-
-console.log('------------------------------------------------------------------------');
-// MAP and SET with FOREACH -->
-
-// MAP
-const currencies = new Map([
-  ['USD', 'United States dollar'],
-  ['EUR', 'Euro'],
-  ['GBP', 'Pound sterling'],
-]);
-
-currencies.forEach((value, key, map) => {
-  console.log(`${key}: ${value}`);
-});
-console.log(currencies);
-
-//SET
-const currenciesUnique = new Set(['USD', 'EUR', 'GBP', 'USD']);
-console.log(currenciesUnique);
-currenciesUnique.forEach((value, _, map) => {
-  console.log(`${value}: ${_}`); // the SAME as value === value (SET do NOT have 'key')
-})
-
-///////////////////////////////////////////////////
-let arr = ['a', 'b', 'c', 'd', 'e'];
-
-console.log('------------------------------------------------------------------------');
-// SLICE
-// Does NOT change original array -->
-
-console.log(arr.slice(2)); // <-- slice method. output: [ 'c', 'd', 'e' ]
-console.log(arr); // <-- ORIGINAL. output: [ 'a', 'b', 'c', 'd', 'e' ]
-
-console.log(arr.slice(2, 4)); 
-console.log(arr.slice(-1));
-console.log(arr.slice(1, -2));
-
-console.log(arr.slice()); // <-- Same
-console.log([...arr]); // <-- Same
-
-console.log('------------------------------------------------------------------------');
-//SPLICE
-// changing original array -->
-
-console.log(arr.splice(2)); // <-- splice method. output: [ 'c', 'd', 'e' ]
-console.log(arr); // <-- ORIGINAL. output: [ 'a', 'b' ]
-
-console.log(arr.splice(1, 2));
 
 
-console.log('------------------------------------------------------------------------');
-// REVERSE
-// changing original array -->
+// Get short initials for user login *** -->
+const computeUserName = acc => {
+  acc.forEach(cur => {
+    cur.username = cur.owner.toLowerCase().split(' ').map(cur => cur[0]).join('');
+  });
+};
+computeUserName(accounts);                     // <-- LAUNCH ^^^^^^^^^^^^^^
 
-arr = ['a', 'b', 'c', 'd', 'e'];
-const arr2 = ['j','i','h','g','f'];
 
-console.log(arr2.reverse());
-console.log(arr2);
+// Show list of money movements *** -->
+const displayMovements = (movements) =>{ // <-- UI MODULE 
+  containerMovements.innerHTML = ''; // <-- Clean all html at class 'containerMovements' 
 
-console.log('------------------------------------------------------------------------');
-// CONCAT
-// Does NOT change original array -->
+  movements.forEach((cur, i) =>{
+    const type = cur > 0 ? 'deposit' : 'withdrawal';
+      const html = `
+        <div class="movements__row">
+          <div class="movements__num"> ${i + 1} </div>
+          <div class="movements__type movements__type--${type}">${type}</div>
+          <div class="movements__value">${cur}$</div>
+        </div>`;
 
-const letter = arr.concat(arr2); // Added arr and arr2 into new Array 'letter'
-console.log(letter); // <-- NEW array. output ['a', 'b', 'c', 'd','e', 'f', 'g', 'h','i', 'j']
-console.log([...arr, ...arr2]); // <-- Same 
+        containerMovements.insertAdjacentHTML('afterbegin', html); // <-- this method allow 2 strings = (position, element)
+  }); 
+};
+displayMovements(account1.movements);         // <-- LAUNCH ^^^^^^^^^^^^^^
 
-console.log(arr); // <-- ORIGINAL. output: [ 'a', 'b', 'c', 'd', 'e' ]
+const calcDisplayBalance = account => {
+  const balance = account.reduce((acc, cur) => {return acc + cur;});
 
-console.log('------------------------------------------------------------------------');
-// JOIN
-// Does NOT change original array -->
+  labelBalance.textContent = `${balance}$`;
+};
 
-console.log(letter.join('-')); // <-- NEW array. output: a-b-c-d-e-f-g-h-i-j
-console.log(letter); // <-- ORIGINAL. output: ['a', 'b', 'c', 'd','e', 'f', 'g', 'h','i', 'j']
+calcDisplayBalance(account1.movements);       // <-- LAUNCH ^^^^^^^^^^^^^^
+
+const calcBalanceSummary = cur => {
+  const curDeposit = cur.filter( cur => cur > 0).reduce( (acc, cur ) => acc + cur);
+  labelSumIn.textContent = `${curDeposit}$`;
+
+  const curWithdrawal = Math.abs(cur.filter( cur => cur < 0).reduce( (acc, cur ) => acc + cur));
+  labelSumOut.textContent = `${curWithdrawal}$`;
+
+  const interest = cur.filter( cur => cur > 0).map( cur => cur * 1.2/100).filter( cur => cur >= 1).reduce( (acc, cur ) => acc + cur); // <-- Interest of the bank
+  labelSumInterest.textContent = `${interest}$`;
+  };
+
+calcBalanceSummary(account1.movements);       // <-- LAUNCH ^^^^^^^^^^^^^^
+
