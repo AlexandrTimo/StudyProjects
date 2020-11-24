@@ -95,7 +95,7 @@ const calcDisplayBalance = account => {
   labelBalance.textContent = `${balance}$`;
 };
 
-calcDisplayBalance(account1.movements);       // <-- LAUNCH ^^^^^^^^^^^^^^
+calcDisplayBalance(account1.movements);       // <-- LAUNCH ^^^^^^^^^^^^^
 
 const calcBalanceSummary = cur => {
   const curDeposit = cur.filter( cur => cur > 0).reduce( (acc, cur ) => acc + cur);
