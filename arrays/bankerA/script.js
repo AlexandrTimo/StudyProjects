@@ -72,10 +72,12 @@ computeUserName(accounts);                     // <-- LAUNCH ^^^^^^^^^^^^^^
 
 
 // Show list of money movements *** -->
-const displayMovements = (movements) =>{ // <-- UI MODULE 
+const displayMovements = (movements, sort = false) =>{ // <-- UI MODULE 
   containerMovements.innerHTML = ''; // <-- Clean all html at class 'containerMovements' 
 
-  movements.forEach((cur, i) =>{
+  const movs = sort ? movements.slice().sort( (a,b) => a - b) : movements;
+  
+  movs.forEach((cur, i) =>{
     const type = cur > 0 ? 'deposit' : 'withdrawal';
     const html = `
       <div class="movements__row">
@@ -226,3 +228,41 @@ btnClose.addEventListener('click', el => {
     inputClosePin.blur(); // <-- Clear focus from input field
   };
 })
+
+// Switcher button SORT -->
+let sorted = false; 
+
+btnSort.addEventListener('click', el => {
+  el.preventDefault();
+
+  displayMovements(currentAccount.movements, !sorted); // Switcher button 
+  sorted = !sorted;
+});
+
+
+// Test All Bank Balance movements -->
+
+/* 
+const accountMovments = accounts.map( acc => acc.movements);
+//console.log(accountMovments);
+const allArrMovements = accountMovments.flat();
+//console.log(allArrMovements);
+const bankMovementsValue = allArrMovements.reduce( (acc, cur) => acc + cur, 0 );
+console.log(bankMovementsValue); 
+*/
+  
+const bankMovementsValueChaining = accounts.map( acc => acc.movements).flat().reduce( (acc, cur) => acc + cur, 0 );
+console.log(bankMovementsValueChaining);
+
+
+// Test --> grab node list(current movement array (not a real array)) and copy it
+
+labelBalance.addEventListener('click', el => {
+  // Using length in DOM ('.movements__value') with querySelectorAll and "map method" in second argument  -->
+  const movementsUI = Array.from(document.querySelectorAll('.movements__value'), el => Number(el.textContent.replace('$', '')));
+  console.log(movementsUI);
+
+  // second example
+  const movementsUI2 = [...document.querySelectorAll('.movements__value')].map(el => Number(el.textContent.replace('$', '')));
+  console.log(movementsUI2);
+});
