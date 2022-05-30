@@ -3,6 +3,7 @@ public class interface_exp {
         
         Human hum1 = new Human();
         Machine mach1 = new Machine();
+        Car car1 = new Car();
 
         hum1.greet();
         mach1.start();
