@@ -6,6 +6,6 @@ public class Machine implements Info {
     
     // Interface connection -> implements <interface name>
     public void showInfo() {
-        System.out.println("Machine ID: " + ID);
+        System.out.println("Machine id: " + ID);
     }
 }
